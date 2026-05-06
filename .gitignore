@@ -1,0 +1,15 @@
+__pycache__/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ty/
+
+# Ignore NetCDF and Zarr data files
+*.nc
+*.zarr
+*.zarr/
+
+# Local forecast and validation artifacts
+forecast_outputs/
+validation_outputs/
+*.png
