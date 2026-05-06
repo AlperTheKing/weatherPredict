@@ -22,6 +22,7 @@ the installed JAX/jax-metal combination.
 | 2-step regression | `uv run pytest tests/test_runner.py::test_two_steps_regression` | Passed: 1 passed, 852.31s |
 | ERA5 RMSE, 12 steps | `uv run --extra scripts scripts/01_evaluation.py --init 2020-01-01T00 --steps 12 --fig /tmp/era5_eval_q850.png` | Stalled in remote ERA5 truth loading; interrupted after more than 1h40m |
 | ERA5 RMSE, 1 step smoke | `uv run --extra scripts scripts/01_evaluation.py --init 2020-01-01T00 --steps 1 --fig /tmp/era5_eval_q850_1step.png` | Passed; figure written to `/tmp/era5_eval_q850_1step.png` |
+| Sensitivity, 1 step smoke | `uv run --extra scripts scripts/02_sensitivity.py --init 2020-01-01T00 --steps 1 --fig /tmp/sensitivity_1step.png` | Passed; gradient 2.1s, figure written to `/tmp/sensitivity_1step.png` |
 | CPU 10-day timing | `uv run forecast.py --init 2020-01-01T00 --steps 40 --timing --out /tmp/keisler_10d_cpu.nc` | Passed; total 153.5s, output 795M |
 | Apple Metal probe | `ENABLE_PJRT_COMPATIBILITY=1 uv run python -c "import jax; print(jax.devices()); print(jax.numpy.arange(10))"` | Failed; device visible but simple JAX op fails |
 
@@ -34,6 +35,16 @@ CMake. Adding `.python-version` with `3.11` and running with `--python 3.11`
 resolved this by using compatible wheels.
 
 ## ERA5 RMSE
+
+Scope of the numeric accuracy values below:
+
+- Data source: ERA5 reanalysis via Google ARCO.
+- Initialization: `2020-01-01T00:00:00`.
+- Verification period in the completed smoke run: +6h, `2020-01-01T06:00:00`.
+- Geography: global 1-degree latitude/longitude grid, area weighted by
+  `cos(latitude)`.
+- Variables: `Z500` is geopotential at 500 hPa; `T850`, `U850`, and `Q850` are
+  temperature, u-wind, and specific humidity at 850 hPa.
 
 The full 12-step RMSE command did run the 12-step forecast successfully:
 
@@ -54,6 +65,26 @@ Additional correctness signal:
 - `tests/test_runner.py::test_two_steps_regression` passed. This checks a
   specific final geopotential value and mean values across all forecast fields
   against upstream regression expectations.
+
+## Sensitivity
+
+The sensitivity script is present as `scripts/02_sensitivity.py`. It computes
+JAX autodiff gradients of a selected forecast scalar with respect to the initial
+conditions.
+
+Completed smoke run:
+
+- Initialization: `2020-01-01T00:00:00`.
+- Lead: +6h (`--steps 1`).
+- Target: `T850` at latitude `35.7`, longitude `254.1` in 0-360 convention
+  (`105.9W`), node `19694`, channel `23`.
+- Visualized input sensitivities: `d(T850) / d(Z500)` and `d(T850) / d(U500)`.
+- Gradient computation time after prepare/JIT entry: 2.1s on CPU.
+- Figure: `/tmp/sensitivity_1step.png`.
+
+The upstream default example is a heavier +72h run (`--steps 12`) initialized at
+`2026-01-03T00`; that was not run in this validation pass because the CPU
+baseline already showed remote ERA5 loading as the dominant bottleneck.
 
 ## Runtime
 
