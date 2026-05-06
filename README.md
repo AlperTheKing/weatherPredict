@@ -104,3 +104,28 @@ uv run --extra scripts scripts/04_point_hindcast.py \
 
 This produces a daily autoregressive point comparison for `T850`, `Z500`, and
 850 hPa wind speed. It is not a surface station forecast.
+
+## Next 7-Day Point Forecast
+
+To create a forward-looking 7-day Çankaya pressure-level forecast from the latest
+available ECMWF Open Data analysis:
+
+```bash
+uv run --extra opendata scripts/05_point_weekly_forecast.py \
+  --init latest \
+  --days 7 \
+  --out-csv reports/cankaya_next_7d_forecast.csv \
+  --out-report reports/cankaya_next_7d_forecast.md
+```
+
+After the target dates have reference values available, verify the forecast:
+
+```bash
+uv run --extra scripts scripts/06_verify_point_forecast.py \
+  --forecast-csv reports/cankaya_next_7d_forecast.csv \
+  --out-csv reports/cankaya_next_7d_verified.csv \
+  --out-report reports/cankaya_next_7d_verified.md
+```
+
+The verification compares overlapping pressure-level fields (`Z500`, `T850`,
+850 hPa wind speed). It still does not verify surface station weather.

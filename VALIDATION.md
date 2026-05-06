@@ -144,6 +144,34 @@ Accuracy over 125 daily targets:
 | t850_c | 4.3244 | 5.2769 | -1.7011 | 0.3640 |
 | wind850_ms | 3.7728 | 4.8285 | -2.6667 | 0.2611 |
 
+## Forward 7-Day Forecast Setup
+
+Latest generated forward-looking point forecast:
+
+- Script: `scripts/05_point_weekly_forecast.py`.
+- Later verification script: `scripts/06_verify_point_forecast.py`.
+- Forecast report: `reports/cankaya_next_7d_forecast.md`.
+- Forecast CSV: `reports/cankaya_next_7d_forecast.csv`.
+- Location request: Çankaya, Ankara, latitude `39.9179`, longitude `32.8627`.
+- Model grid: `40.0N, 33.0E`.
+- Latest available ECMWF Open Data cycle at run time: `2026-05-06T00:00:00` UTC.
+- Forecast range: `2026-05-06T00:00:00` through `2026-05-13T00:00:00`.
+- Cadence: 6 hours in the CSV, daily rows in the report.
+- Runtime: 35.6s.
+
+Verification command for later:
+
+```bash
+uv run --extra scripts scripts/06_verify_point_forecast.py \
+  --forecast-csv reports/cankaya_next_7d_forecast.csv \
+  --out-csv reports/cankaya_next_7d_verified.csv \
+  --out-report reports/cankaya_next_7d_verified.md
+```
+
+The verification compares pressure-level reference fields (`Z500`, `T850`, and
+850 hPa wind speed). Surface observations are outside this model's output
+contract.
+
 ## Notes
 
 - Large forecast outputs are written under `/tmp` and are not committed.
