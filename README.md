@@ -87,3 +87,20 @@ uv run forecast.py --init 2020-01-01T00 --steps 40 --timing --out /tmp/keisler_1
 
 Results, failures, backend status, and timing are recorded in
 [VALIDATION.md](VALIDATION.md).
+
+## Point Hindcast
+
+For a local pressure-level comparison at Çankaya, Ankara:
+
+```bash
+uv run --extra scripts scripts/04_point_hindcast.py \
+  --truth-source openmeteo-ifs \
+  --start 2026-01-01T00 \
+  --requested-end 2026-05-06 \
+  --out-csv reports/cankaya_2026_keisler_daily.csv \
+  --out-report reports/cankaya_2026_hindcast.md \
+  --cache-init
+```
+
+This produces a daily autoregressive point comparison for `T850`, `Z500`, and
+850 hPa wind speed. It is not a surface station forecast.

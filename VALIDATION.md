@@ -121,6 +121,29 @@ Probe details:
 - `jax-metal` was uninstalled after the probe so the default environment returns
   to `0.7.1 [CpuDevice(id=0)]`.
 
+## Çankaya Point Hindcast
+
+Latest point-run artifact:
+
+- Script: `scripts/04_point_hindcast.py`.
+- Report: `reports/cankaya_2026_hindcast.md`.
+- CSV: `reports/cankaya_2026_keisler_daily.csv`.
+- Location request: Çankaya, Ankara, latitude `39.9179`, longitude `32.8627`.
+- Model grid: `40.0N, 33.0E`.
+- Forecast initialization: `2026-01-01T00:00:00`.
+- Scored range: daily `2026-01-02T00:00:00` through `2026-05-06T00:00:00`.
+- Forecast style: one autoregressive run sampled every 24 hours.
+- Reference source: Open-Meteo historical-forecast ECMWF IFS 0.25 pressure-level
+  fields at `40.0N, 32.75E`.
+
+Accuracy over 125 daily targets:
+
+| Field | MAE | RMSE | Bias | Corr |
+| --- | ---: | ---: | ---: | ---: |
+| z500_m | 70.4082 | 85.9772 | 3.0781 | 0.3152 |
+| t850_c | 4.3244 | 5.2769 | -1.7011 | 0.3640 |
+| wind850_ms | 3.7728 | 4.8285 | -2.6667 | 0.2611 |
+
 ## Notes
 
 - Large forecast outputs are written under `/tmp` and are not committed.
