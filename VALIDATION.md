@@ -172,6 +172,26 @@ The verification compares pressure-level reference fields (`Z500`, `T850`, and
 850 hPa wind speed). Surface observations are outside this model's output
 contract.
 
+## Automated 1-Week Forward Verification
+
+Scheduled workflow:
+
+- Script: `scripts/07_automation.py`.
+- macOS LaunchAgent template:
+  `automation/com.alper.weatherpredict.cankaya.plist`.
+- Forecast production window: `2026-05-07` through `2026-05-14`.
+- Schedule: `10:00` and `22:00` local machine time.
+- Forecast horizon: 7 days, 6-hour cadence.
+- Verification rule: wait until the last target time in a forecast is at least
+  24 hours old, then compare against Open-Meteo historical-forecast ECMWF IFS
+  0.25 pressure-level reference.
+- Aggregate report: `reports/automation/accuracy_summary.md`.
+
+Accuracy will be reported with MAE, RMSE, bias, correlation, range-normalized
+diagnostic percentage, and skill versus a persistence baseline. The percentage
+is kept as a diagnostic convenience only; MAE/RMSE/correlation and persistence
+skill are the primary verification metrics.
+
 ## Notes
 
 - Large forecast outputs are written under `/tmp` and are not committed.

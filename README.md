@@ -129,3 +129,40 @@ uv run --extra scripts scripts/06_verify_point_forecast.py \
 
 The verification compares overlapping pressure-level fields (`Z500`, `T850`,
 850 hPa wind speed). It still does not verify surface station weather.
+
+## Automated Çankaya Forecast Job
+
+The scheduled workflow runs the same 7-day pressure-level point forecast for
+Çankaya and later verifies mature forecast files against Open-Meteo's ECMWF IFS
+0.25 pressure-level reference.
+
+Manual one-shot run:
+
+```bash
+uv run --extra opendata --extra scripts scripts/07_automation.py
+```
+
+Install the macOS `launchd` job:
+
+```bash
+scripts/install_cankaya_automation.sh
+```
+
+The checked-in plist runs at `10:00` and `22:00` local machine time. Forecast
+production is bounded to `2026-05-07` through `2026-05-14`; verification keeps
+processing any mature forecast files after their target dates have a 24-hour
+reference-data lag.
+
+Outputs:
+
+- Forecast CSVs: `reports/automation/forecasts/`
+- Forecast reports: `reports/automation/forecast_reports/`
+- Verification CSVs: `reports/automation/verifications/`
+- Verification reports: `reports/automation/verification_reports/`
+- Aggregate accuracy: `reports/automation/accuracy_summary.md`
+
+Uninstall:
+
+```bash
+scripts/uninstall_cankaya_automation.sh
+```

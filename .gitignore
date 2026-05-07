@@ -13,3 +13,6 @@ __pycache__/
 forecast_outputs/
 validation_outputs/
 *.png
+
+# Scheduled job logs
+reports/automation/logs/*.log
