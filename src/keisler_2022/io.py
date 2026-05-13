@@ -155,6 +155,13 @@ def load_ecmwf_open_data(
 
     # Rename level coordinate
     ds = ds.rename({"isobaricInhPa": "level"})
+    missing_levels = sorted(set(REQUIRED_LEVELS) - set(ds.level.values.tolist()))
+    if missing_levels:
+        raise ValueError(
+            f"GRIB file missing required pressure levels: {missing_levels}. "
+            f"Available: {list(ds.level.values)}"
+        )
+    ds = ds.sel(level=list(REQUIRED_LEVELS))
 
     # Shift longitude from [-180, 180) to [0, 360)
     lon = ds.longitude.values
