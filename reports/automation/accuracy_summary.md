@@ -1,7 +1,7 @@
 # Cankaya Automated Forecast Accuracy
 
-- Last update: `2026-05-13T21:06:01.272228+03:00`.
-- Forecast files: `13`.
+- Last update: `2026-05-14T10:00:08.012413+03:00`.
+- Forecast files: `15`.
 - Verified forecast files: `0`.
 - Status: no mature verified forecast rows are available yet.
 
